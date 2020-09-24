@@ -7,11 +7,11 @@
       "orders": [
         {
           "id": "1",
-          "delivery_address": "Rahasailiotie 1"
+          "deliveryAddress": "Rahasailiotie 22"
         },
         {
           "id": "2",
-          "delivery_address": "Ankkakartanontie 4"
+          "deliveryAddress": "Ankkakartanontie 4"
         }
       ]
     },
@@ -22,7 +22,7 @@
       "orders": [
         {
           "id": "1",
-          "delivery_address": "Paratiisitie 13"
+          "deliveryAddress": "Paratiisitie 13"
         }
       ]
     }

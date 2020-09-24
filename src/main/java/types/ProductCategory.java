@@ -1,14 +1,23 @@
 package types;
 
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class ProductCategory {
-	private String id;
+	// base value for newly created ids
+	private static int count = 1000;
+	
+	private String id = count++ + "";
 	private String name;
+	private List<Product> products;
 	
 	public ProductCategory() {}
 
-	public ProductCategory(String id, String name) {
-		this.id = id;
+	public ProductCategory(String id, String name, List<Product> products) {
 		this.name = name;
+		this.products = products;
 	}
 
 	/**
@@ -16,13 +25,6 @@ public class ProductCategory {
 	 */
 	public String getId() {
 		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	/**
@@ -38,6 +40,19 @@ public class ProductCategory {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	/**
+	 * @return the products
+	 */
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	/**
+	 * @param products the products to set
+	 */
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}	
 	
 }

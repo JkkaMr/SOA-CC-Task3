@@ -1,7 +1,13 @@
 package types;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Product {
-	private String id;
+	// base value for newly created ids
+	private static int count = 1000;
+		
+	private String id = count++ + "";
 	private String name;
 	private String manufacturer;
 	private int availability;
@@ -9,7 +15,6 @@ public class Product {
 	public Product() {}
 	
 	public Product(String id, String name, String manufacturer, int availability) {
-		this.id = id;
 		this.name = name;
 		this.manufacturer = manufacturer;
 		this.availability = availability;
@@ -20,13 +25,6 @@ public class Product {
 	 */
 	public String getId() {
 		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	/**

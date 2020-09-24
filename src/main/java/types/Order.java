@@ -1,13 +1,18 @@
 package types;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Order {
-	private String id;
+	// base value for newly created ids
+	private static int count = 1000;
+	
+	private String id = count++ + "";
 	private String deliveryAddress;
 	
 	public Order() {}
 	
-	public Order(String id, String deliveryAddress) {
-		this.id = id;
+	public Order(String deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
 
@@ -16,13 +21,6 @@ public class Order {
 	 */
 	public String getId() {
 		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	/**

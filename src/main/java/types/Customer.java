@@ -1,15 +1,22 @@
 package types;
 
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Customer {
-	private String id;
+	// base value for newly created ids
+	private static int count = 1000;
+	
+	private String id = count++ + "";
 	private String firstName;
 	private String lastName;
-	private Order[] orders;
+	private List<Order> orders;
 	
 	public Customer() {}
 	
-	public Customer(String id, String firstName, String lastName, Order[] orders) {
-		this.id = id;
+	public Customer(String firstName, String lastName, List<Order> orders) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.orders = orders;
@@ -20,12 +27,6 @@ public class Customer {
 	 */
 	public String getId() {
 		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
 	}
 	/**
 	 * @return the firstName
@@ -54,13 +55,13 @@ public class Customer {
 	/**
 	 * @return the orders
 	 */
-	public Order[] getOrders() {
+	public List<Order> getOrders() {
 		return orders;
 	}
 	/**
 	 * @param orders the orders to set
 	 */
-	public void setOrders(Order[] orders) {
+	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
 }
