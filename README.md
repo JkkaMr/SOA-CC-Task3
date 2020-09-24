@@ -1,8 +1,8 @@
-#SOA-CC-Task3
+# SOA-CC-Task3
 
 Root URL: http://localhost:8080/webshopREST/
 
-###Java-versio
+### Java-versio
 
 Todettu toimivaksi ainakin uusimmalla JDK -versiolla `14.0.2`
 
