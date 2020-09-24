@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>demo3</groupId>
-    <artifactId>SOA-CC-Task3</artifactId>
+    <artifactId>webshopREST</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SOA-CC-Task3</name>
+    <name>webshopREST</name>
 
     <build>
-        <finalName>SOA-CC-Task3</finalName>
+        <finalName>webshopREST</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -51,6 +51,19 @@
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>
         </dependency>
+        <!-- API, java.xml.bind module -->
+				<dependency>
+				    <groupId>jakarta.xml.bind</groupId>
+				    <artifactId>jakarta.xml.bind-api</artifactId>
+				    <version>2.3.2</version>
+				</dependency>
+				
+				<!-- Runtime, com.sun.xml.bind module -->
+				<dependency>
+				    <groupId>org.glassfish.jaxb</groupId>
+				    <artifactId>jaxb-runtime</artifactId>
+				    <version>2.3.2</version>
+				</dependency>
     </dependencies>
     <properties>
         <jersey.version>2.31</jersey.version>
