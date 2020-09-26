@@ -22,6 +22,7 @@ public class Customer {
 		this.orders = orders;
 	}
 	
+	
 	/**
 	 * @return the id
 	 */
