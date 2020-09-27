@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import errors.DataNotFoundException;
+
 @XmlRootElement
 public class ProductCategory {
 	// base value for newly created ids
@@ -53,6 +55,30 @@ public class ProductCategory {
 	 */
 	public void setProducts(List<Product> products) {
 		this.products = products;
+	}
+
+	/** Adds a product to the list of products
+	 * @param product to be added
+	 * @return added product
+	 */
+	public Product addProduct(Product product) {
+		this.products.add(product);
+		return product;
+	}
+
+	/** Finds product with corresponding id
+	 * @param productId
+	 * @return found product
+	 */
+	public Product getProduct(String productId) {
+		Product found = this.products.stream().filter(prod -> prod.getId().equals(productId))
+		.findFirst().orElse(null);
+		
+		if (found == null) {
+			throw new DataNotFoundException("Product with id " + productId + "not found.");
+		}
+		
+		return found;
 	}	
 	
 }

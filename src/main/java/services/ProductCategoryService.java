@@ -91,8 +91,6 @@ public class ProductCategoryService {
 			category.setName(newCategory.getName());
 			category.setProducts(newCategory.getProducts());
 			return category;
-		
-
 	}
 	
 	/**

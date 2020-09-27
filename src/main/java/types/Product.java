@@ -68,6 +68,18 @@ public class Product {
 	public void setAvailability(int availability) {
 		this.availability = availability;
 	}
+
+	/** Copies info from given product to this one.
+	 * Except the id stays the same.
+	 * @param product to copy info from
+	 * @return this product
+	 */
+	public Product update(Product product) {
+		this.setAvailability(product.getAvailability());
+		this.setManufacturer(product.getManufacturer());
+		this.setName(product.getName());
+		return this;
+	}
 	
 	
 }

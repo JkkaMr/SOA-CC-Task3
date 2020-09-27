@@ -52,7 +52,7 @@ public class CustomerResource {
     public Response addCustomer(Customer customer) {
     	Customer addedCustomer = cs.addCustomer(customer);
     	if (addedCustomer != null) {
-    		return Response.status(Status.OK).entity(addedCustomer).build();
+    		return Response.status(Status.CREATED).entity(addedCustomer).build();
     	}
     	// if customer == null, the data reading from shopdata.json has failed
     	return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{}").build();
