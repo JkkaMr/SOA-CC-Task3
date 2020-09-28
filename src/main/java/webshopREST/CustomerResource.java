@@ -1,6 +1,5 @@
 package webshopREST;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import services.CustomerService;
+import database.SingletonDatabase;
 import types.Customer;
 
 /**
@@ -24,11 +23,11 @@ import types.Customer;
 @Path("/customers")
 @Produces(MediaType.APPLICATION_JSON)
 public class CustomerResource {
-	CustomerService cs = new CustomerService();
+	private SingletonDatabase database = SingletonDatabase.getDatabase();
 
     @GET
     public Response getCustomers() {
-    	List<Customer> customers = cs.getCustomers();
+    	List<Customer> customers = database.getCustomers();
     	if (customers != null) {
     		return Response.status(Status.OK).entity(customers).build();
     	}
@@ -39,7 +38,7 @@ public class CustomerResource {
     @GET
     @Path("/{customerId}")
     public Response getCustomer(@PathParam("customerId") String customerId) {
-    	Customer customer = cs.getCustomer(customerId);
+    	Customer customer = database.getCustomer(customerId);
     	if (customer != null) {
 			return Response.status(Status.OK).entity(customer).build();
     	}
@@ -50,7 +49,7 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCustomer(Customer customer) {
-    	Customer addedCustomer = cs.addCustomer(customer);
+    	Customer addedCustomer = database.addCustomer(customer);
     	if (addedCustomer != null) {
     		return Response.status(Status.CREATED).entity(addedCustomer).build();
     	}
@@ -62,7 +61,7 @@ public class CustomerResource {
     @Path("/{customerId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response replaceCustomer(@PathParam("customerId") String customerId, Customer customer) {
-    	Customer replacedCustomer = cs.replaceCustomer(customerId, customer);
+    	Customer replacedCustomer = database.replaceCustomer(customerId, customer);
     	if (replacedCustomer != null) {
 			return Response.status(Status.OK).entity(replacedCustomer).build();
     	}
@@ -73,10 +72,16 @@ public class CustomerResource {
     @DELETE
     @Path("/{customerId}")
     public Response removeCustomer(@PathParam("customerId") String customerId) {
-    	if (cs.removeCustomer(customerId)) {
+    	if (database.removeCustomer(customerId)) {
 			return Response.status(Status.OK).entity("{}").build();
     	}
-    	// if cs.removeCustomer() == false, customer with id was not found (or data reading from shopdata.json has failed)
+    	// if database.removeCustomer() == false, customer with id was not found (or data reading from shopdata.json has failed)
     	return Response.status(Status.BAD_REQUEST).entity("{}").build();
+    }
+    
+    //ORDER SERVICE
+    @Path("/{customerId}/orders")
+    public OrderResource getOrderResource() {
+    	return new OrderResource();
     }
 }

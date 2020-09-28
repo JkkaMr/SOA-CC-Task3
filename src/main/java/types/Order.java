@@ -36,6 +36,15 @@ public class Order {
 	public void setDeliveryAddress(String deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
+
+	/** Updates the order with given data
+	 * @param order containing new data
+	 * @return order with updated information
+	 */
+	public Order update(Order order) {
+		this.deliveryAddress = order.getDeliveryAddress();
+		return this;
+	}
 	
 	
 }

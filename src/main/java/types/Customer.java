@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import errors.DataNotFoundException;
+
 @XmlRootElement
 public class Customer {
 	// base value for newly created ids
@@ -64,5 +66,29 @@ public class Customer {
 	 */
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
+	}
+
+	/** Adds a new order
+	 * @param order to be added
+	 * @return
+	 */
+	public Order addOrder(Order order) {
+		this.orders.add(order);
+		return order;
+	}
+
+	/** Finds an order with specified id or throws an exception if not found
+	 * @param orderId id to search with
+	 * @return found order
+	 */
+	public Order getOrder(String orderId) {
+		Order found = this.orders.stream().filter(ord -> ord.getId().equals(orderId))
+		.findFirst().orElse(null);
+		
+		if (found == null) {
+			throw new DataNotFoundException("Order with id " + orderId + "not found.");
+		}
+		
+		return found;
 	}
 }

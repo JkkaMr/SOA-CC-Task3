@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import errors.DataNotFoundException;
 import errors.HandlingException;
 import types.Customer;
+import types.Order;
 import types.Product;
 import types.ProductCategory;
 import types.ShopData;
@@ -48,10 +49,9 @@ public class SingletonDatabase {
 		return obj;
 	}
 
-	public List<Customer> getCustomers() {
-		return savedCustomers;
-	}
 
+	//----Category------------
+	
 	/**
 	 * Function returns the list of product categories
 	 * @return list of product categories or throws an exception if there was an error
@@ -110,7 +110,12 @@ public class SingletonDatabase {
 		}
 		
 			category.setName(newCategory.getName());
-			category.setProducts(newCategory.getProducts());
+		
+			//Products replaced only if there are new products
+			if (!newCategory.getProducts().isEmpty()) {
+				category.setProducts(newCategory.getProducts());				
+			}
+			
 			return category;
 	}
 	
@@ -126,7 +131,7 @@ public class SingletonDatabase {
 		return savedProductCategories.removeIf(category -> category.getId().equals(categoryId));
 	}
 
-	
+	//----------Product----------------------------
 	
 	/** Get all products in a category of specified id.
 	 * @param categoryId id of the category whose products will be returned.
@@ -194,16 +199,131 @@ public class SingletonDatabase {
 		return category.getProducts().removeIf(product -> productId.equals(product.getId()));
 	}
 	
-	/*
+	
+	//------Customer--------------------------
+	
+	/**
+	 * @return list of customers
 	 */
-	//Nopea testaus:
-	public static void main(String[] args) {
-		SingletonDatabase db = SingletonDatabase.getDatabase();
-		
-		
-		List<Customer> testiA = SingletonDatabase.getDatabase().getCustomers();
-		List<ProductCategory> testiB = SingletonDatabase.getDatabase().getProductCategories();
+	public List<Customer> getCustomers() {
+		return savedCustomers;
+	}
+	
+	/**
+	 * 
+	 * @param customerId id to find
+	 * @return customer with customerId, null if not found (or if there was an error)
+	 */
+	public Customer getCustomer(String customerId) {
+		if (savedCustomers != null) {
+			return savedCustomers.stream().filter(customer -> customer.getId().equals(customerId)).findFirst().orElse(null);
 		}
+		return null;
+	}
+	
+	
+	/**
+	 * 
+	 * @param customer customer object to be added
+	 * @return Added customer object (or null if there was an error)
+	 */
+	public Customer addCustomer(Customer customer) {
+		if (savedCustomers != null) {
+			savedCustomers.add(customer);
+			return customer;
+		}
+		return null;
+	}
+	
+	/**
+	 * Replaces customer info, if new orders are empty, old ones will be used
+	 * @param customerId id to be replaced
+	 * @param newCustomer customer to be replaced by
+	 * @return replaced customer, null if not found (or if there was an error)
+	 */
+	public Customer replaceCustomer(String customerId, Customer newCustomer) {
+		Customer customer = this.getCustomer(customerId);
+		if (customer != null) {
+			customer.setFirstName(newCustomer.getFirstName());
+			customer.setLastName(newCustomer.getLastName());
+			
+			//if new customer info does not contain new orders old ones will not change
+			if (!newCustomer.getOrders().isEmpty()) {
+				customer.setOrders(newCustomer.getOrders());
+			}
+			
+			return customer;
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param customerId id to be removed
+	 * @return removed true if found and succeed
+	 */
+	public boolean removeCustomer(String customerId) {
+		if (savedCustomers != null) {
+			return savedCustomers.removeIf(customer -> customer.getId().equals(customerId));
+		}
+		return false;
+	}
+	
+	
+	//----Order--------------------
+	
+	/** Get all products in a category of specified id.
+	 * @param customerId id of the category whose products will be returned.
+	 * @return List of orders in the category.
+	 */
+	public List<Order> getOrders(String customerId) {
+		Customer customer = this.getCustomer(customerId);
+		return customer.getOrders();
+	}
+	
+	/** Finds order with given id.
+	 * @param orderId 
+	 * @return order with given id or null if not found
+	 */
+	public Order getOrder(String customerId, String orderId) {
+		Customer customer = this.getCustomer(customerId);
+		
+		Order order = customer.getOrders().stream()
+				.filter(prod -> orderId.equals(prod.getId()))
+				.findFirst()
+				.orElse(null);
+		
+		if (order == null) {
+			throw new DataNotFoundException("Order with id "+ orderId + " not found");
+		}
+		
+		return order;
+	}
+	
+	
+	/** Adds a order to a specified customer.
+	 * @param customerId
+	 * @param order
+	 * @return Added order
+	 */
+	public Order addOrder(String customerId, Order order) {
+		Customer customer = this.getCustomer(customerId);
+		return customer.addOrder(order);
+	}
 
-
+	public Order replaceOrder(String customerId, String orderId, Order order) {
+		Customer customer = this.getCustomer(customerId);
+		Order orderToBeUpdated = customer.getOrder(orderId);
+		return orderToBeUpdated.update(order);
+	}
+	
+	/** Delete a order from a customer with corresponding ids
+	 * @param customerId
+	 * @param orderId
+	 * @return was a order successfully deleted
+	 */
+	public boolean removeOrder(String customerId, String orderId) {
+		Customer customer = this.getCustomer(customerId);
+		return customer.getOrders().removeIf(order -> orderId.equals(order.getId()));
+	}
 }
