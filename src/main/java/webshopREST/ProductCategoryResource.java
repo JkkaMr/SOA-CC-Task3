@@ -41,8 +41,7 @@ import types.ProductCategory;
 	    	if (category != null) {
 				return Response.status(Status.OK).entity(category).build();
 	    	}
-	    	// if customer == null, customer with id was not found (or data reading from shopdata.json has failed)
-	    	return Response.status(Status.BAD_REQUEST).entity("{}").build();
+	    	return Response.status(Status.NOT_FOUND).entity("{}").build();
 	    }
 	    
 	    @POST

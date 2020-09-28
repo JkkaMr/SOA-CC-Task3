@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import errors.DataNotFoundException;
-import errors.HandlingException;
 import types.Customer;
 import types.Order;
 import types.Product;
 import types.ProductCategory;
 import types.ShopData;
+import webshopREST.errors.DataNotFoundException;
+import webshopREST.errors.HandlingException;
 
 /**
  * Reads the JSON-file and acts as a dumb database for the web shop
@@ -68,9 +68,9 @@ public class SingletonDatabase {
 	 * @param categoryId id to find
 	 * @return ProductCategory with categoryId, exception if not found (or if there was an error)
 	 */
-	public ProductCategory getCategory(String categoryId) {
+	public ProductCategory getCategory(String categoryId) throws DataNotFoundException {
 		if (savedProductCategories == null) {
-			throw new DataNotFoundException("Category with id "+ categoryId + " not found");
+			throw new HandlingException("Categories missing");
 		}
 		ProductCategory category = savedProductCategories.stream()
 				.filter(cat -> cat.getId().equals(categoryId))
@@ -106,7 +106,7 @@ public class SingletonDatabase {
 		ProductCategory category = this.getCategory(categoryId);
 		
 		if (category == null) {
-			throw new HandlingException("Category with id "+ categoryId + " could not be replaced");
+			throw new DataNotFoundException("Category with id "+ categoryId + " not found");
 		}
 		
 			category.setName(newCategory.getName());
@@ -140,6 +140,9 @@ public class SingletonDatabase {
 	 */
 	public List<Product> getProducts(String categoryId, String manufacturer) {
 		ProductCategory category = this.getCategory(categoryId);
+		if (category == null) {
+			throw new DataNotFoundException("Category with id "+ categoryId + " not found");
+		}
 		String manufacturerRegex;
 		if (manufacturer != null) {
 			manufacturerRegex = ".*" + manufacturer + ".*";
@@ -159,6 +162,9 @@ public class SingletonDatabase {
 	 */
 	public Product getProduct(String categoryId, String productId) {
 		ProductCategory category = this.getCategory(categoryId);
+		if (category == null) {
+			throw new DataNotFoundException("Category with id "+ categoryId + " not found");
+		}
 		
 		Product product = category.getProducts().stream()
 				.filter(prod -> productId.equals(prod.getId()))
@@ -180,12 +186,21 @@ public class SingletonDatabase {
 	 */
 	public Product addProduct(String categoryId, Product product) {
 		ProductCategory category = this.getCategory(categoryId);
+		if (category == null) {
+			throw new DataNotFoundException("Category with id "+ categoryId + " not found");
+		}
 		return category.addProduct(product);
 	}
 
 	public Product replaceProduct(String categoryId, String productId, Product product) {
 		ProductCategory category = this.getCategory(categoryId);
+		if (category == null) {
+			throw new DataNotFoundException("Category with id "+ categoryId + " not found");
+		}
 		Product productToBeUpdated = category.getProduct(productId);
+		if (productToBeUpdated == null) {
+			throw new DataNotFoundException("Product with id "+ categoryId + " could not be replaced");
+		}
 		return productToBeUpdated.update(product);
 	}
 	
@@ -196,6 +211,9 @@ public class SingletonDatabase {
 	 */
 	public boolean removeProduct(String categoryId, String productId) {
 		ProductCategory category = this.getCategory(categoryId);
+		if (category == null) {
+			throw new DataNotFoundException("Category with id "+ categoryId + " not found");
+		}
 		return category.getProducts().removeIf(product -> productId.equals(product.getId()));
 	}
 	
@@ -206,6 +224,9 @@ public class SingletonDatabase {
 	 * @return list of customers
 	 */
 	public List<Customer> getCustomers() {
+		if (savedCustomers == null) {
+			throw new HandlingException("Could not get customers");
+		}
 		return savedCustomers;
 	}
 	
@@ -215,10 +236,15 @@ public class SingletonDatabase {
 	 * @return customer with customerId, null if not found (or if there was an error)
 	 */
 	public Customer getCustomer(String customerId) {
-		if (savedCustomers != null) {
-			return savedCustomers.stream().filter(customer -> customer.getId().equals(customerId)).findFirst().orElse(null);
+		if (savedCustomers == null) {
+			throw new HandlingException("Could not get customer data");
 		}
-		return null;
+		
+		Customer cust =  savedCustomers.stream().filter(customer -> customer.getId().equals(customerId)).findFirst().orElse(null);
+		 if(cust == null) {
+			 throw new DataNotFoundException("customer with id " + customerId + " not found");
+		 }
+		return cust;
 	}
 	
 	
@@ -228,11 +254,14 @@ public class SingletonDatabase {
 	 * @return Added customer object (or null if there was an error)
 	 */
 	public Customer addCustomer(Customer customer) {
-		if (savedCustomers != null) {
+		if (savedCustomers == null) {
+			throw new HandlingException("Could not get customer data");
+		}
+		else {
 			savedCustomers.add(customer);
 			return customer;
 		}
-		return null;
+
 	}
 	
 	/**
@@ -243,7 +272,10 @@ public class SingletonDatabase {
 	 */
 	public Customer replaceCustomer(String customerId, Customer newCustomer) {
 		Customer customer = this.getCustomer(customerId);
-		if (customer != null) {
+		 if(customer == null) {
+			 throw new DataNotFoundException("customer with id " + customerId + " not found");
+		 }
+		 else{
 			customer.setFirstName(newCustomer.getFirstName());
 			customer.setLastName(newCustomer.getLastName());
 			
@@ -254,7 +286,7 @@ public class SingletonDatabase {
 			
 			return customer;
 		}
-		return null;
+
 	}
 	
 	/**
@@ -263,10 +295,13 @@ public class SingletonDatabase {
 	 * @return removed true if found and succeed
 	 */
 	public boolean removeCustomer(String customerId) {
-		if (savedCustomers != null) {
+		if (savedCustomers == null) {
+			throw new HandlingException("Could not get customer data");
+		}
+		else{
 			return savedCustomers.removeIf(customer -> customer.getId().equals(customerId));
 		}
-		return false;
+
 	}
 	
 	
@@ -278,6 +313,9 @@ public class SingletonDatabase {
 	 */
 	public List<Order> getOrders(String customerId) {
 		Customer customer = this.getCustomer(customerId);
+		 if(customer == null) {
+			 throw new DataNotFoundException("customer with id " + customerId + " not found");
+		 }
 		return customer.getOrders();
 	}
 	
@@ -287,6 +325,9 @@ public class SingletonDatabase {
 	 */
 	public Order getOrder(String customerId, String orderId) {
 		Customer customer = this.getCustomer(customerId);
+		 if(customer == null) {
+			 throw new DataNotFoundException("customer with id " + customerId + " not found");
+		 }
 		
 		Order order = customer.getOrders().stream()
 				.filter(prod -> orderId.equals(prod.getId()))
@@ -308,12 +349,21 @@ public class SingletonDatabase {
 	 */
 	public Order addOrder(String customerId, Order order) {
 		Customer customer = this.getCustomer(customerId);
+		 if(customer == null) {
+			 throw new DataNotFoundException("customer with id " + customerId + " not found");
+		 }
 		return customer.addOrder(order);
 	}
 
 	public Order replaceOrder(String customerId, String orderId, Order order) {
 		Customer customer = this.getCustomer(customerId);
+		 if(customer == null) {
+			 throw new DataNotFoundException("customer with id " + customerId + " not found");
+		 }
 		Order orderToBeUpdated = customer.getOrder(orderId);
+		 if(orderToBeUpdated == null) {
+			 throw new DataNotFoundException("order with id " + customerId + " not found");
+		 }
 		return orderToBeUpdated.update(order);
 	}
 	
@@ -324,6 +374,9 @@ public class SingletonDatabase {
 	 */
 	public boolean removeOrder(String customerId, String orderId) {
 		Customer customer = this.getCustomer(customerId);
+		 if(customer == null) {
+			 throw new DataNotFoundException("customer with id " + customerId + " not found");
+		 }
 		return customer.getOrders().removeIf(order -> orderId.equals(order.getId()));
 	}
 }

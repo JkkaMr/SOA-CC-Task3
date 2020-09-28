@@ -15,8 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import types.Product;
 import database.SingletonDatabase;
+import types.Product;
 
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON)

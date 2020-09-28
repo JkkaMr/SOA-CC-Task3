@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import errors.DataNotFoundException;
-import errors.HandlingException;
 import types.ProductCategory;
 import types.ShopData;
+import webshopREST.errors.DataNotFoundException;
+import webshopREST.errors.HandlingException;
 
 /**
  * Class for Product category services

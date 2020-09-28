@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import errors.DataNotFoundException;
+import webshopREST.errors.DataNotFoundException;
 
 @XmlRootElement
 public class Customer {

@@ -1,4 +1,4 @@
-package errors;
+package webshopREST.errors;
 
 /**
  * Class for 404 exceptions
@@ -9,6 +9,7 @@ public class DataNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	public DataNotFoundException (String msg) {
 		super(msg);
+
 	}
 
 }

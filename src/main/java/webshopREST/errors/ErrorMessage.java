@@ -1,4 +1,4 @@
-package errors;
+package webshopREST.errors;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

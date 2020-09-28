@@ -1,4 +1,4 @@
-package errors;
+package webshopREST.errors;
 
 /**
  * Class for other exceptions
