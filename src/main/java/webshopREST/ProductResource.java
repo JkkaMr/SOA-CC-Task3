@@ -44,6 +44,10 @@ public class ProductResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addCustomer(@PathParam("categoryId") String categoryId, Product product) {
+		
+		product.addLink("/webshopREST/webapi/productcategories/" + categoryId + "/products/" + product.getId(), "self");
+
+		
     	Product addedProduct = database.addProduct(categoryId, product);
     	return Response.status(Status.CREATED).entity(addedProduct).build();
     }
@@ -53,6 +57,9 @@ public class ProductResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     public Response replaceProduct(@PathParam("categoryId") String categoryId, 
     								@PathParam("productId") String productId, Product product) {
+		
+		product.addLink("/webshopREST/webapi/productcategories/" + categoryId + "/products/" + product.getId(), "self");
+		
     	Product replacedProduct = database.replaceProduct(categoryId, productId, product);
     	return Response.status(Status.OK).entity(replacedProduct).build();
 	}

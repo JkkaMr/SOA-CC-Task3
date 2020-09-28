@@ -1,5 +1,8 @@
 package types;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -12,12 +15,34 @@ public class Product {
 	private String manufacturer;
 	private int availability;
 	
+	private List<Link> links = new ArrayList<Link>();
+	
 	public Product() {}
 	
 	public Product(String id, String name, String manufacturer, int availability) {
 		this.name = name;
 		this.manufacturer = manufacturer;
 		this.availability = availability;
+	}
+
+	/**
+	 * 
+	 * @param url the link
+	 * @param rel what the link relates to
+	 */
+	public void addLink(String url, String rel) {
+		Link link = new Link();
+		link.setHref(url);
+		link.setRel(rel);
+		links.add(link);
+	}
+	
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
 	}
 
 	/**

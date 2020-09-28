@@ -49,6 +49,10 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCustomer(Customer customer) {
+
+    	customer.addLink("/webshopREST/webapi/customers/" + customer.getId(),  "self");
+    	customer.addLink("/webshopREST/webapi/customers/" + customer.getId() + "/orders", "orders");
+    	
     	Customer addedCustomer = database.addCustomer(customer);
     	if (addedCustomer != null) {
     		return Response.status(Status.CREATED).entity(addedCustomer).build();
@@ -61,6 +65,10 @@ public class CustomerResource {
     @Path("/{customerId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response replaceCustomer(@PathParam("customerId") String customerId, Customer customer) {
+    	
+    	customer.addLink("/webshopREST/webapi/customers/" + customer.getId(),  "self");
+    	customer.addLink("/webshopREST/webapi/customers/" + customer.getId() + "/orders", "orders");
+    	
     	Customer replacedCustomer = database.replaceCustomer(customerId, customer);
     	if (replacedCustomer != null) {
 			return Response.status(Status.OK).entity(replacedCustomer).build();

@@ -42,6 +42,9 @@ public class OrderResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addCustomer(@PathParam("customerId") String customerId, Order order) {
+		
+		order.addLink("/webshopREST/webapi/customers/" + customerId + "/orders/"+order.getId(), "self");
+		
     	Order addedOrder = database.addOrder(customerId, order);
     	return Response.status(Status.CREATED).entity(addedOrder).build();
     }
@@ -51,6 +54,9 @@ public class OrderResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     public Response replaceOrder(@PathParam("customerId") String customerId, 
     								@PathParam("orderId") String orderId, Order order) {
+
+		order.addLink("/webshopREST/webapi/customers/" + customerId + "/orders/"+order.getId(), "self");
+		
     	Order replacedOrder = database.replaceOrder(customerId, orderId, order);
     	return Response.status(Status.OK).entity(replacedOrder).build();
 	}

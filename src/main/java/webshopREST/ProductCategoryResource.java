@@ -47,6 +47,10 @@ import types.ProductCategory;
 	    @POST
 	    @Consumes(MediaType.APPLICATION_JSON)
 	    public Response addCategory(ProductCategory category) {
+	    	
+	    	category.addLink("/webshopREST/webapi/productcategories/" + category.getId(),                   "self");
+	    	category.addLink("/webshopREST/webapi/productcategories/" + category.getId() + "/products", "products");
+
 	    	ProductCategory addedCategory = database.addCategory(category);
 	    	if (addedCategory != null) {
 	    		return Response.status(Status.CREATED).entity(addedCategory).build();
@@ -58,6 +62,10 @@ import types.ProductCategory;
 	    @Path("/{categoryId}")
 	    @Consumes(MediaType.APPLICATION_JSON)
 	    public Response replaceCategory(@PathParam("categoryId") String categoryId, ProductCategory category) {
+	    	
+	    	category.addLink("/webshopREST/webapi/productcategories/" + category.getId(),                   "self");
+	    	category.addLink("/webshopREST/webapi/productcategories/" + category.getId() + "/products", "products");
+	    	
 	    	ProductCategory replacedCategory = database.replaceCategory(categoryId, category);
 	    	if (replacedCategory != null) {
 				return Response.status(Status.OK).entity(replacedCategory).build();
